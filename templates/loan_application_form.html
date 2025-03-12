@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Loan Application Form</h2>
+
+        <!-- Display success or warning messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'warning' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Check if the user has a pending loan application -->
+        {% if has_pending_application %}
+            <div class="alert alert-warning">
+                You already have a pending loan application. Please wait for processing.
+            </div>
+        {% else %}
+            <form method="POST" action="{{ url_for('submit_loan_application') }}">
+                <!-- Loan Amount Input -->
+                <div class="mb-3">
+                    <label for="loan_amount" class="form-label">Loan Amount (KSh)</label>
+                    <input type="number" class="form-control" id="loan_amount" name="loan_amount" required>
+                </div>
+
+                <!-- Loan Period Dropdown -->
+                <div class="mb-3">
+                    <label for="loan_period" class="form-label">Loan Period (Years)</label>
+                    <select class="form-control" id="loan_period" name="loan_period" required>
+                        {% for period in range(1, 4) %}
+                            <option value="{{ period }}">{{ period }} Year(s)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Payment Method Dropdown -->
+                <div class="mb-3">
+                    <label for="payment_method" class="form-label">Payment Method</label>
+                    <select class="form-control" id="payment_method" name="payment_method" required>
+                        <option value="bank">Bank</option>
+                        <option value="mpesa">M-Pesa</option>
+                    </select>
+                </div>
+
+                <!-- Bank Details (Hidden by Default) -->
+                <div id="bank_details" class="mb-3 hidden">
+                    <label for="bank_details" class="form-label">Enter Bank Account Number</label>
+                    <input type="text" class="form-control" id="bank_details" name="bank_details">
+                </div>
+
+                <!-- M-Pesa Details (Hidden by Default) -->
+                <div id="mpesa_details" class="mb-3 hidden">
+                    <label for="mpesa_details" class="form-label">Enter M-Pesa Number</label>
+                    <input type="text" class="form-control" id="mpesa_details" name="mpesa_details">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <script>
+        // Show/hide payment details based on the selected method
+        const paymentMethod = document.getElementById('payment_method');
+        const bankDetails = document.getElementById('bank_details');
+        const mpesaDetails = document.getElementById('mpesa_details');
+
+        paymentMethod.addEventListener('change', function () {
+            if (this.value === 'bank') {
+                bankDetails.classList.remove('hidden');
+                mpesaDetails.classList.add('hidden');
+            } else {
+                mpesaDetails.classList.remove('hidden');
+                bankDetails.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

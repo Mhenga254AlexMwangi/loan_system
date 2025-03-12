@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <style>
+        /* Style for the Dashboard Heading */
+        h1 {
+            font-size: 42px;
+            color: #2c3e50; /* Dark blue-gray for a modern look */
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #3498db, #8e44ad); /* Gradient text effect */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* Style for the Paragraph */
+        p {
+            font-size: 20px;
+            color: #7f8c8d; /* Soft gray for readability */
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            font-weight: 400;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        /* Keyframes for Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+
+    <h1>Welcome to Your Dashboard</h1>
+    <p>Here you can manage your loans and access other features.</p>
+{% endblock %}

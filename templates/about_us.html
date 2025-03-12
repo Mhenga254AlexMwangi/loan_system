@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+    <div class="about-container">
+        <h1 class="about-title">About Us</h1>
+        <div class="about-content">
+            <p class="about-text">
+                Welcome to <strong>Jibabe Sacco System</strong>, your trusted partner in achieving financial freedom. 
+                We are committed to providing easy, fast, and transparent loan services to help you meet your financial goals.
+            </p>
+            <p class="about-text">
+                Our mission is to empower individuals and businesses by offering accessible and affordable loan solutions. 
+                Whether you need funds for personal use, business growth, or emergencies, we are here to support you every step of the way.
+            </p>
+            <p class="about-text">
+                At Jibabe Sacco System, we believe in transparency, fairness, and customer satisfaction. 
+                Our team of financial experts is dedicated to ensuring that you receive the best service possible.
+            </p>
+        </div>
+
+        <div class="about-features">
+            <h2 class="features-title">Why Choose Us?</h2>
+            <ul class="features-list">
+                <li class="feature-item">✅ Fast and easy loan approval process</li>
+                <li class="feature-item">✅ Competitive interest rates</li>
+                <li class="feature-item">✅ Flexible repayment options</li>
+                <li class="feature-item">✅ Transparent terms and conditions</li>
+                <li class="feature-item">✅ Dedicated customer support</li>
+            </ul>
+        </div>
+
+        <div class="about-team">
+            <h2 class="team-title">Our Team</h2>
+            <p class="team-text">
+                Our team consists of experienced financial professionals who are passionate about helping you succeed. 
+                We work tirelessly to ensure that your financial needs are met with the highest level of service and care.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        /* Custom Styles */
+        .about-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-title {
+            text-align: center;
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .about-content {
+            margin-bottom: 30px;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .about-features {
+            margin-bottom: 30px;
+        }
+
+        .features-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .features-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-item {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-item::before {
+            content: "✔️";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+        }
+
+        .about-team {
+            margin-bottom: 20px;
+        }
+
+        .team-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .team-text {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+{% endblock %}

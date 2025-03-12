@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container for Contact Content */
+        .contact-container {
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px; /* Increased width for full-width feel */
+            width: 90%; /* Responsive width */
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Heading Style */
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #8e44ad);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Paragraph Style */
+        p {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* List Style */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        ul li:hover {
+            background-color: #3498db;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        ul li:hover i {
+            color: #fff;
+        }
+
+        ul li i {
+            margin-right: 15px;
+            font-size: 24px;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+
+        /* Keyframes for Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .contact-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            ul li {
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+
+            ul li i {
+                font-size: 20px;
+            }
+        }
+    </style>
+
+    <div class="contact-container">
+        <h1>Contact Us</h1>
+        <p>If you have any questions or need assistance, feel free to reach out to us. We're here to help!</p>
+        <ul>
+            <li><i class="fas fa-envelope"></i>Email: supportloan@gmail.com</li>
+            <li><i class="fas fa-phone"></i>Phone: 0114329940</li>
+            <li><i class="fas fa-map-marker-alt"></i>Address: Embu town, Wakagoto Building, 3rd Floor, Room Number 8</li>
+        </ul>
+    </div>
+
+    <!-- FontAwesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+{% endblock %}

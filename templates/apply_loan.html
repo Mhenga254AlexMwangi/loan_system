@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Loan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .status-pending {
+            color: #ff9800; /* Orange */
+            font-weight: bold;
+        }
+
+        .status-approved {
+            color: #4caf50; /* Green */
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #f44336; /* Red */
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .logout-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #dc3545; /* Red */
+        }
+
+        .logout-link:hover {
+            color: #c82333; /* Darker Red */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply Loan</h1>
+
+        {% if application %}
+            <h2>Application Status</h2>
+            <p>
+                Your loan application status is:
+                <span class="status-{{ application[0] }}">{{ application[0] }}</span>
+            </p>
+
+            {% if application[0] == 'pending' %}
+                <p>Your documents have been received. Please wait for a maximum of two days for verification.</p>
+            {% elif application[0] == 'approved' %}
+                <p>Your application has been approved. You can borrow up to <strong>KSh {{ application[1] }}</strong>.</p>
+                <a href="{{ url_for('loan_application_form') }}" class="btn btn-primary">Proceed to Loan Application</a>
+            {% elif application[0] == 'rejected' %}
+                <p>Your application has been rejected. Reason: <strong>{{ application[2] }}</strong></p>
+                <p>Please contact support for further assistance.</p>
+            {% endif %}
+        {% else %}
+            <p>No loan application found. Please submit your documents first.</p>
+            <a href="{{ url_for('upload_documents') }}" class="btn btn-primary">Submit Documents</a>
+        {% endif %}
+    </div>
+</body>
+</html>

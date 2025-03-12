@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f4f7f6, #e2e8f0);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .preview img {
+            max-width: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            form {
+                padding: 20px;
+            }
+
+            input[type="text"],
+            input[type="file"] {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Loan Application</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="success-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="POST" enctype="multipart/form-data">
+        <!-- Step 1: Name and ID Number -->
+        <div class="step active" id="step1">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="id_number">ID Number:</label>
+            <input type="text" id="id_number" name="id_number" required><br><br>
+
+            <div class="button-group">
+                <button type="button" onclick="nextStep(2)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Kenyan ID (Front) -->
+        <div class="step" id="step2">
+            <label for="id_front">Upload Kenyan ID (Front):</label>
+            <input type="file" id="id_front" name="id_front" accept="image/*" style="display: none;">
+            <button type="button" id="capture_id_front">Capture Photo</button>
+            <button type="button" id="upload_id_front">Upload File</button>
+            <div class="preview" id="id_front_preview"></div><br><br>
+
+            <div class="button-group">
+                <button type="button" onclick="prevStep(1)">Previous</button>
+                <button type="button" onclick="nextStep(3)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Kenyan ID (Back) -->
+        <div class="step" id="step3">
+            <label for="id_back">Upload Kenyan ID (Back):</label>
+            <input type="file" id="id_back" name="id_back" accept="image/*" style="display: none;">
+            <button type="button" id="capture_id_back">Capture Photo</button>
+            <button type="button" id="upload_id_back">Upload File</button>
+            <div class="preview" id="id_back_preview"></div><br><br>
+
+            <div class="button-group">
+                <button type="button" onclick="prevStep(2)">Previous</button>
+                <button type="button" onclick="nextStep(4)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 4: M-Pesa Statement -->
+        <div class="step" id="step4">
+            <label for="mpesa_statement">Upload M-Pesa Statement (PDF):</label>
+            <input type="file" id="mpesa_statement" name="mpesa_statement" accept="application/pdf" required><br><br>
+
+            <div class="button-group">
+                <button type="button" onclick="prevStep(3)">Previous</button>
+                <button type="button" onclick="nextStep(5)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Selfie -->
+        <div class="step" id="step5">
+            <label for="selfie">Upload Selfie:</label>
+            <input type="file" id="selfie" name="selfie" accept="image/*" style="display: none;">
+            <button type="button" id="capture_selfie">Capture Photo</button>
+            <button type="button" id="upload_selfie">Upload File</button>
+            <div class="preview" id="selfie_preview"></div><br><br>
+
+            <div class="button-group">
+                <button type="button" onclick="prevStep(4)">Previous</button>
+                <button type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Camera and Preview Logic -->
+    <script>
+        let currentStep = 1;
+
+        // Function to show the next step
+        function nextStep(step) {
+            if (validateStep(currentStep)) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                document.getElementById(`step${step}`).classList.add('active');
+                currentStep = step;
+            }
+        }
+
+        // Function to show the previous step
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+        }
+
+        // Function to validate the current step
+        function validateStep(step) {
+            if (step === 1) {
+                const name = document.getElementById('name').value;
+                const idNumber = document.getElementById('id_number').value;
+                if (!name || !idNumber) {
+                    alert('Please fill in your name and ID number.');
+                    return false;
+                }
+            } else if (step === 2) {
+                const idFront = document.getElementById('id_front').files[0];
+                if (!idFront) {
+                    alert('Please upload or capture the front of your ID.');
+                    return false;
+                }
+            } else if (step === 3) {
+                const idBack = document.getElementById('id_back').files[0];
+                if (!idBack) {
+                    alert('Please upload or capture the back of your ID.');
+                    return false;
+                }
+            } else if (step === 4) {
+                const mpesaStatement = document.getElementById('mpesa_statement').files[0];
+                if (!mpesaStatement) {
+                    alert('Please upload your M-Pesa statement.');
+                    return false;
+                }
+            } else if (step === 5) {
+                const selfie = document.getElementById('selfie').files[0];
+                if (!selfie) {
+                    alert('Please upload or capture your selfie.');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Function to capture photo using the camera
+        async function capturePhoto(previewElementId, inputElementId) {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Show video in a preview element
+            const previewElement = document.getElementById(previewElementId);
+            previewElement.innerHTML = '';
+            previewElement.appendChild(video);
+
+            // Capture photo on button click
+            const captureButton = document.createElement('button');
+            captureButton.textContent = 'Capture';
+            captureButton.onclick = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Convert canvas to data URL and set as file input value
+                const dataUrl = canvas.toDataURL('image/jpeg');
+                const file = dataUrlToFile(dataUrl, 'capture.jpg');
+
+                // Create a new FileList and assign it to the input element
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const inputElement = document.getElementById(inputElementId);
+                inputElement.files = dataTransfer.files;
+
+                // Show captured photo
+                previewElement.innerHTML = `<img src="${dataUrl}" width="200">`;
+
+                // Stop the camera
+                stream.getTracks().forEach(track => track.stop());
+            };
+            previewElement.appendChild(captureButton);
+        }
+
+        // Convert data URL to a File object
+        function dataUrlToFile(dataUrl, fileName) {
+            const arr = dataUrl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], fileName, { type: mime });
+        }
+
+        // Add event listeners for capture/upload buttons
+        document.getElementById('capture_id_front').addEventListener('click', () => capturePhoto('id_front_preview', 'id_front'));
+        document.getElementById('upload_id_front').addEventListener('click', () => document.getElementById('id_front').click());
+
+        document.getElementById('capture_id_back').addEventListener('click', () => capturePhoto('id_back_preview', 'id_back'));
+        document.getElementById('upload_id_back').addEventListener('click', () => document.getElementById('id_back').click());
+
+        document.getElementById('capture_selfie').addEventListener('click', () => capturePhoto('selfie_preview', 'selfie'));
+        document.getElementById('upload_selfie').addEventListener('click', () => document.getElementById('selfie').click());
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repay Loan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Repay Loan</h2>
+
+        <!-- Display success or warning messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Display Loan Details -->
+        {% if loan %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Loan Details</h5>
+                    <p class="card-text"><strong>Total Loan Amount:</strong> KSh {{ loan.total_amount }}</p>
+                    <p class="card-text"><strong>Amount Paid:</strong> KSh {{ loan.paid_amount }}</p>
+                    <p class="card-text"><strong>Remaining Balance:</strong> KSh {{ loan.balance }}</p>
+                </div>
+            </div>
+
+            <!-- Repay Loan Form -->
+            <form method="POST" action="{{ url_for('repay_loan') }}">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount to Pay (KSh)</label>
+                    <input type="number" class="form-control" id="amount" name="amount" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Repay</button>
+            </form>
+        {% else %}
+            <div class="alert alert-warning">
+                No active loan found.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
