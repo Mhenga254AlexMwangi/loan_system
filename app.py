@@ -126,7 +126,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         phone = request.form['phone']
-        password = request.form['password']  # Store password in plain text (not recommended)
+        password = request.form['password']  
 
         cursor = get_db_cursor()
         try:
@@ -167,7 +167,6 @@ def upload_documents():
 
             cursor = get_db_cursor()
 
-            # Insert all file types into a single row
             cursor.execute(
                 '''
                 INSERT INTO applications (
@@ -203,7 +202,7 @@ def apply_loan():
         flash("Please log in first", "warning")
         return redirect(url_for('login'))
 
-    application = None  # Default value if no application exists
+    application = None  
 
     try:
         user_id = session.get('user_id')  
@@ -224,10 +223,10 @@ def apply_loan():
         cursor.close()  # Ensure the cursor is closed
 
         if application:
-            print("✅ Latest Application:", application)  # Debugging statement
-            print("✅ Application Status:", application[0])  # Debugging statement
+            print("✅ Latest Application:", application)  
+            print("✅ Application Status:", application[0])  
         else:
-            print("❌ No loan application found.")  # Debug message
+            print("❌ No loan application found.")  
 
     except Exception as e:
         print("❌ Error fetching loan application:", str(e))
@@ -244,14 +243,14 @@ def loan_application_form():
     cursor = get_db_cursor()
 
     try:
-        # Check if the user has a pending loan application
+        
         cursor.execute(
             "SELECT id FROM loan_applications WHERE user_id = %s AND status = 'pending'",
             (session['user_id'],)
         )
         has_pending_application = cursor.fetchone() is not None
 
-        # Fetch the user's maximum loan amount
+        
         cursor.execute(
             "SELECT max_amount FROM applications WHERE user_id = %s ORDER BY created_at DESC LIMIT 1",
             (session['user_id'],)
@@ -262,7 +261,7 @@ def loan_application_form():
             flash("Your application has not been verified yet.", "danger")
             return redirect(url_for('apply_loan'))
 
-        max_amount = int(application[0])  # Convert Decimal to integer
+        max_amount = int(application[0])  r
 
         return render_template(
             'loan_application_form.html',
@@ -287,7 +286,6 @@ def submit_loan_application():
     cursor = get_db_cursor()
 
     try:
-        # Check if the user already has a pending loan application
         cursor.execute(
             "SELECT id FROM loan_applications WHERE user_id = %s AND status = 'pending'",
             (session['user_id'],)
@@ -298,14 +296,14 @@ def submit_loan_application():
             flash("You already have a pending loan application. Please wait for processing.", "warning")
             return redirect(url_for('apply_loan'))
 
-        # Get form data
+       
         loan_amount = float(request.form['loan_amount'])
         payment_method = request.form['payment_method']
         loan_period = int(request.form['loan_period'])
         bank_details = request.form.get('bank_details')
         mpesa_details = request.form.get('mpesa_details')
 
-        # Fetch the user's maximum loan amount
+        
         cursor.execute(
             "SELECT max_amount FROM applications WHERE user_id = %s ORDER BY created_at DESC LIMIT 1",
             (session['user_id'],)
@@ -313,19 +311,19 @@ def submit_loan_application():
         application = cursor.fetchone()
         max_amount = float(application[0])
 
-        # Validate loan amount
+        
         if loan_amount < 1 or loan_amount > max_amount:
             flash(f"Please choose an amount within your range (1 KSh to {max_amount} KSh).", "danger")
             return redirect(url_for('loan_application_form'))
 
-        # Calculate total amount with interest (e.g., 5% interest rate)
+       
         interest_rate = 5.0
         total_amount = loan_amount * (1 + interest_rate / 100)
 
-        # Set the initial balance equal to the total amount
+        
         balance = total_amount
 
-        # Insert the loan application into the database
+       
         cursor.execute(
             """
             INSERT INTO loan_applications (
@@ -383,7 +381,7 @@ def admin():
     rows = cursor.fetchall()
     cursor.close()
 
-    # Group documents by application_id
+    
     applications = {}
     for row in rows:
         application_id = row[0]
@@ -443,16 +441,16 @@ def get_document(application_id, document_type):
     if not document_data or not document_data[0]:
         flash("Document not found", "danger")
         return redirect(url_for('admin'))
-    # Determine the MIME type based on the document type
+  
     if document_type in ['id_front', 'id_back', 'selfie']:
-        mime_type = 'image/jpeg'  # Assuming images are in JPEG format
+        mime_type = 'image/jpeg'  
     elif document_type == 'mpesa_statement':
-        mime_type = 'application/pdf'  # Assuming M-Pesa statement is a PDF
+        mime_type = 'application/pdf'  
     else:
         flash("Invalid document type", "danger")
         return redirect(url_for('admin'))
 
-    # Return the document as a response
+    
     return Response(document_data[0], mimetype=mime_type)
 
 @app.route('/admin/action/<int:application_id>/<action>', methods=['POST'])
@@ -471,7 +469,7 @@ def admin_action(application_id, action):
                 flash("Please enter the maximum amount the borrower can get.", "danger")
                 return redirect(url_for('admin'))
             
-            # Update the application status to 'approved' and set max_amount
+            
             cursor.execute(
                 "UPDATE applications SET status = 'approved', max_amount = %s WHERE id = %s",
                 (max_amount, application_id)
@@ -484,7 +482,7 @@ def admin_action(application_id, action):
                 flash("Please provide a reason for rejection.", "danger")
                 return redirect(url_for('admin'))
             
-            # Update the application status to 'rejected' and set rejection_reason
+           
             cursor.execute(
                 "UPDATE applications SET status = 'rejected', rejection_reason = %s WHERE id = %s",
                 (rejection_reason, application_id)
@@ -495,9 +493,9 @@ def admin_action(application_id, action):
             flash("Invalid action", "danger")
             return redirect(url_for('admin'))
 
-        # Archive the application after processing
+       
         cursor.execute("UPDATE applications SET archived = TRUE WHERE id = %s", (application_id,))
-        commit_db()  # Commit changes to the database
+        commit_db()  
 
     except Exception as e:
         print(f"Error: {e}")
@@ -516,7 +514,7 @@ def repay_loan_form():
     cursor = get_db_cursor()
 
     try:
-        # Fetch the user's active loan
+     
         cursor.execute(
             """
             SELECT total_amount, paid_amount, balance 
@@ -557,7 +555,7 @@ def repay_loan():
     cursor = get_db_cursor()
 
     try:
-        # Fetch the user's active loan
+    
         cursor.execute(
             """
             SELECT id, total_amount, paid_amount, balance 
@@ -576,10 +574,10 @@ def repay_loan():
 
         loan_id, total_amount, paid_amount, balance = loan
 
-        # Get the payment amount from the form
+      
         amount = float(request.form['amount'])
 
-        # Validate the payment amount
+       
         if amount <= 0:
             flash("Please enter a valid amount.", "danger")
             return redirect(url_for('repay_loan_form'))
@@ -588,7 +586,6 @@ def repay_loan():
             flash(f"You cannot pay more than the remaining balance (KSh {balance}).", "danger")
             return redirect(url_for('repay_loan_form'))
 
-        # Update the loan details
         new_paid_amount = paid_amount + amount
         new_balance = balance - amount
 
